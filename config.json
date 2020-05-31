@@ -1,0 +1,21 @@
+{
+    "bot_token": "YOUR_BOTS_TOKEN",
+    "prefixes": [
+        "PREFFERED",
+        "PREFISES"
+    ],
+    "owners": [
+        "OWNER_ID_1",
+        "OWNER_ID_2"
+    ],
+    "game": {
+        "status": "GAME STATUS (online, idle, dnd, invisible)",
+        "type": "GAME TYPE (WATCHING, PLAYING, LISTENING, STREAMING)",
+        "name": [
+            "GAME NAME 1",
+            "GAME NAME 2"
+        ],
+        "url": "STREAM_URL",
+        "interval": 15
+    }
+}

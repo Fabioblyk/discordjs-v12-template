@@ -1,0 +1,28 @@
+{
+  "name": "discord-v12-bot-with-language-support",
+  "version": "12.2.0",
+  "description": "An empty template to get you started when making a new bot",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "discord.js",
+    "discord",
+    "bot",
+    "v12",
+    "lang",
+    "language",
+    "tempalte",
+    "ready",
+    "configurable"
+  ],
+  "author": "Barış DEMİRCİ",
+  "license": "MIT",
+  "dependencies": {
+    "bookman": "^2.0.1",
+    "discord.js": "^12.2.0",
+    "fs": "0.0.1-security",
+    "path": "^0.12.7"
+  }
+}
