@@ -4,6 +4,7 @@ module.exports = {
     permissions: [], // set command permissions
     guildOnly: true, // set true if command is guild only
     ownerOnly: true, // set true if command is owner only
+    enabled: true, // set true if command enabled
     exec: async (client, message, args) => {
         // the rest of the code
     }
