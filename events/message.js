@@ -51,6 +51,10 @@ module.exports = async message => {
         return message.channel.send(message.guild.language.command_owner_only);
     }
     
+    if (cmdFile.enabled === false) {
+        return;
+    }
+    
     // check if member has permission
     if (message.client.config.owners.includes(message.author.id) || // if user is bot owner
         message.member.permissions.has(cmdFile.permissions)) { // or has enough permission to run this command
