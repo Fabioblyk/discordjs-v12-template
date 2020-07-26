@@ -24,7 +24,7 @@ for (let module of modules) {
     for (let file of commandFiles) {
 
         // Show an informative message on console
-        console.info(`${file} komutu yükleniyor...`);
+        console.info(`Loading command: ${file}`);
 
         // Access command file
         file = require(`../commands/${module}/${file}`);

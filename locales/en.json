@@ -5,5 +5,7 @@
     "ping_command": ":ping_pong: Pong! {ping}ms",
     "specify_language": "Specify a language",
     "specify_valid_language": "Specify a valid language. Available languages: `{languages}`",
-    "language_updated": "Your language has been successfully updated"
+    "language_updated": "Your language has been successfully updated",
+    "command_disabled": "This command is disabled",
+    "wait_cooldown": "You have to wait {cooldown} seconds to use this command again"
 }

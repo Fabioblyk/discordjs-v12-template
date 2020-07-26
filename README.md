@@ -1,9 +1,9 @@
 Bot template with multi language support prepared using DiscordJS v12
 ---
 
-- Easy to use bot template that can be installed and customized quickly<
+- Easy to use bot template that can be installed and customized quickly. Now with MongoDB support!
 - You just need to edit `config.json` file
-- If you are using DiscordJS v11 don't worry you can use the [v11 template](https://github.com/Project-Hammer/discordjs-v11-template) of the same code<
+- If you are using DiscordJS v11 don't worry you can use the [v11 template](https://github.com/Project-Hammer/discordjs-v11-template) of the same code
 
 Get live support
 ---
@@ -16,6 +16,10 @@ Installation
 - Edit `config.json` file
 - Run `npm install` command
 - Run `npm start` command
+
+Contributing
+---
+- Feel free to open PRs
 
 Quick Documentation
 ---

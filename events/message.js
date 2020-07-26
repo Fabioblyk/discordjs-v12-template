@@ -1,3 +1,6 @@
+// save active users for cooldown
+const activeUsers = {};
+
 // triggered when someone send a message
 module.exports = async message => {
 
@@ -20,9 +23,13 @@ module.exports = async message => {
     // check if guild language file is not set
     if (!message.guild.language) {
         
+        let guildModel = await client.database.models.guildModel.findOne({
+            guildID: message.guild.id
+        });
+
         // check if guild has data
-        let language = db.has(`${message.guild.id}.language`) ? 
-            await db.fetch(`${message.guild.id}.language`) :
+        let language = guildModel ? 
+            guildModel.language :
             "en";
         
         // set guilds language file
@@ -44,15 +51,14 @@ module.exports = async message => {
         cmdFile = message.client.aliases.get(command); // then set cmdFile to it
     } else return; // else terminate job
 
+    // check disabled commands
+    if (!cmdFile.enabled) return message.channel.send(message.guild.language.command_disabled);
+
     // check ownerOnly commands
     if (cmdFile.ownerOnly && !message.client.config.owners.includes(message.author.id)) {
 
         // send informative message that says you can't use this command if you are not owner
         return message.channel.send(message.guild.language.command_owner_only);
-    }
-    
-    if (cmdFile.enabled === false) {
-        return;
     }
     
     // check if member has permission
@@ -65,8 +71,14 @@ module.exports = async message => {
             // check if message sent in guild
             if (message.guild) { // if message sent in guild
 
+                // check for cooldown
+                if (checkCooldown(cmdFile, message)) return message.channel.send(message.guild.language.wait_cooldown.replace(/{cooldown}/g, cmdFile.cooldown));
+            
                 // then run command without any action
                 cmdFile.exec(message.client, message, args);
+
+                // set cooldown for user
+                setCooldown(cmdFile, message);
             } else { // if message not sent in guild
 
                 // send informative message that says you can't use this command
@@ -74,9 +86,16 @@ module.exports = async message => {
             }
         } else { // if command is not guild only
 
+            // check for cooldown
+            if (checkCooldown(cmdFile, message)) return message.channel.send(message.guild.language.wait_cooldown.replace(/{cooldown}/g, cmdFile.cooldown));
+            
             // then run command without any action
             cmdFile.exec(message.client, message, args);
+
+            // set cooldown for user
+            setCooldown(cmdFile, message);
         }
+
     } else  { // if user has not permissions to run this commands
 
         // send informative message that says you can't use this command
@@ -84,4 +103,27 @@ module.exports = async message => {
             .replace(/{permissions}/g, cmdFile.permissions.join(", ")));
     }
 
+}
+
+// add new users to cooldown
+function setCooldown(cmd, message) {
+    if (activeUsers.hasOwnProperty(cmd.name)) {
+        activeUsers[cmd.name].push(message.author.id);
+        message.client.setTimeout(() => {
+            activeUsers[cmd.name].splice(activeUsers[cmd.name].indexOf(message.author.id), 1);
+        }, cmd.cooldown * 1000);
+    }
+}
+
+function checkCooldown(cmd, message) {
+    if (
+        cmd.cooldown && 
+        typeof cmd.cooldown === "number" && 
+        cmd.cooldown >= 1 && 
+        cmd.cooldown <= 1440
+    ) {
+        if (!activeUsers.hasOwnProperty(cmd.name)) activeUsers[cmd.name] = [];
+        if (activeUsers[cmd.name].includes(message.author.id)) return true;
+    }
+    return false;
 }

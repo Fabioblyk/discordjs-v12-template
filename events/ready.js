@@ -44,21 +44,21 @@ module.exports = async client => {
 
     // Iterate same process for every guilds
     for (let guild of client.guilds.cache.array()) {
+        let lang = "en";
 
-        // get guild language
-        let lang = await client.db.fetch(`${guild.id}.language`);
+        let guildModel = await client.database.models.guildModel.find({
+            guildID: guild.id
+        });
 
-        // check if no language data found
-        if (!lang) {
-            lang = "en"; // set default language to english
-            client.db.set(`${guild.id}.language`, "en"); // and save it to database
-        }
+        if (guildModel && guildModel.language) lang = guildModel.language;
 
-        // set guilds language file
         guild.language = require(`../locales/${lang}.json`);
     }
 
     // Show an informative message on console
+    process.stdout.write("\n");
+    console.log("   Template by barbarbar338    ");
+    console.log("-------------------------------");
     console.log(`[      BOT]: ${client.user.username} is ready!`); // show bot name
     console.log(`[ PREFIXES]: ${client.config.prefixes.join(" ")}`); // show bots prefixes
     console.log(`[   GUILDS]: ${client.guilds.cache.size}`); // show guild count
