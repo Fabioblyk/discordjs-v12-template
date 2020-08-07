@@ -12,5 +12,4 @@ const guildSchema = Schema({
     }
 });
 
-// export guildModel
 module.exports = model("guildModel", guildSchema, "GUILD_COLLECTION");

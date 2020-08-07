@@ -1,37 +1,16 @@
-// Once our client gets ready, these line of codes will be triggered
+const guildModel = require("../models/guildModel");
 module.exports = async client => {
-
-    // Set clients presence (playing message)
     client.user.setPresence({
-        status: client.config.game.status, // set status (online, idle, dnd (do not disturb), invisible)
+        status: client.config.game.status,
         activity: {
-
-            // set activity name
-            name: typeof client.config.game.name === "string" ? // if activity name is a string
-                client.config.game.name : // then set activity as it
-                client.config.game.name instanceof Array ? // if its an array
-                client.config.game.name[0] : // then set activity as its first element
-                null, // else set activity as nothing
-            
-            // set activity type
-            type: client.config.game.type, // (PLAYING, STREAMING, LISTENING, WATCHING)
-
-            // set stream url (if you are using STREAMING activity type)
-            url: client.config.game.url && 
-                client.config.game.url.trim().length ? 
-                client.config.game.url : // if we specified a valid url then set stream url as it
-                null // else set stream url as nothing
+            name: typeof client.config.game.name === "string" ? client.config.game.name : client.config.game.name instanceof Array ? client.config.game.name[0] : null,
+            type: client.config.game.type,
+            url: client.config.game.url && client.config.game.url.trim().length ? client.config.game.url : null
         }
     });
-
-    // set updating presence
     if (client.config.game.name instanceof Array && client.config.game.name.length) {
         client.setInterval(async () => {
-
-            // get a random activity name
             let activity = client.config.game.name[Math.floor(Math.random() * client.config.game.name.length)];
-
-            // update activity
             await client.user.setActivity(activity, {
                 type: client.config.game.type,
                 url: client.config.game.url && 
@@ -41,28 +20,19 @@ module.exports = async client => {
             });
         }, ((typeof client.config.game.interval === "number" && client.config.game.interval) || 30) * 1000);
     }
-
-    // Iterate same process for every guilds
     for (let guild of client.guilds.cache.array()) {
-        let lang = "en";
-
-        let guildModel = await client.database.models.guildModel.find({
-            guildID: guild.id
-        });
-
-        if (guildModel && guildModel.language) lang = guildModel.language;
-
-        guild.language = require(`../locales/${lang}.json`);
+        let language = "en";
+        let guildDocument = await guildModel.findOne({ guildID: guild.id });
+        if (guildDocument && guildDocument.language) language = guildDocument.language;
+        guild.language = require(`../locales/${language}.json`);
     }
-
-    // Show an informative message on console
     process.stdout.write("\n");
     console.log("   Template by barbarbar338    ");
     console.log("-------------------------------");
-    console.log(`[      BOT]: ${client.user.username} is ready!`); // show bot name
-    console.log(`[ PREFIXES]: ${client.config.prefixes.join(" ")}`); // show bots prefixes
-    console.log(`[   GUILDS]: ${client.guilds.cache.size}`); // show guild count
-    console.log(`[ CHANNELS]: ${client.channels.cache.size}`); // show channel count
-    console.log(`[    USERS]: ${client.users.cache.size}`); // show user count
-    console.log(`[BOOT TIME]: ${process.uptime() * 1000}ms`); // show boot time
+    console.log(`[      BOT]: ${client.user.username} is ready!`);
+    console.log(`[ PREFIXES]: ${client.config.prefixes.join(" ")}`);
+    console.log(`[   GUILDS]: ${client.guilds.cache.size}`);
+    console.log(`[ CHANNELS]: ${client.channels.cache.size}`);
+    console.log(`[    USERS]: ${client.users.cache.size}`);
+    console.log(`[BOOT TIME]: ${process.uptime() * 1000}ms`);
 }

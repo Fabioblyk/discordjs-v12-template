@@ -1,8 +1,7 @@
-// triggered when bot leaves a guild
+const guildModel = require("../models/guildModel");
 module.exports = async guild => {
-    // delete guild model
-    await guild.client.database.models.guildModel.deleteMany({
+    await guildModel.deleteMany({
         guildID: guild.id
     });
-    console.log(`[LEFT GUILD]: ${guild.name} | ${guild.id}`); // Show an informative on console
+    console.log(`[LEFT GUILD]: ${guild.name} | ${guild.id}`);
 }
