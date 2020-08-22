@@ -1,7 +1,9 @@
 const { Client } = require("discord.js");
+const { I18n } = require("locale-parser");
 const Mongoose = require("mongoose");
 const client = new Client();
 client.config = require("./config.json");
+client.i18n = new I18n({ defaultLocale: "en" });
 Mongoose.connect(client.config.mongo_uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true

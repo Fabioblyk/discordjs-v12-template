@@ -24,7 +24,7 @@ module.exports = async client => {
         let language = "en";
         let guildDocument = await guildModel.findOne({ guildID: guild.id });
         if (guildDocument && guildDocument.language) language = guildDocument.language;
-        guild.language = require(`../locales/${language}.json`);
+        guild.language = language;
     }
     process.stdout.write("\n");
     console.log("   Template by barbarbar338    ");

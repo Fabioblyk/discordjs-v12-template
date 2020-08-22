@@ -1,0 +1,2 @@
+ping_command: ":ping_pong: Pong! %{ping}ms"
+language_updated: Your language has been successfully updated

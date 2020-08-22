@@ -11,9 +11,9 @@ module.exports = {
     permissions: [ "BAN_MEMBERS" ],
     exec: async (client, message, args) => {
         let lang = args[0];
-        if (!lang) return await message.channel.send(message.guild.language.specify_language);
-        let languages = fs.readdirSync("./locales/").filter(file => file.endsWith(".json")).map(file => file.replace(".json", ""));
-        if (!languages.includes(lang)) return await message.channel.send(message.guild.language.specify_valid_language.replace(/{languages}/g, languages.join(", ")));
+        if (!lang) return await message.channel.send(client.i18n.get(message.guild.language, "errors", "specify_language"));
+        let languages = client.i18n.getLocales();
+        if (!languages.includes(lang)) return await message.channel.send(client.i18n.get(message.guild.language, "errors", "specify_valid_language", { languages: languages.join(", ") }));
         let guildDocument = await guildModel.findOne({
             guildID: message.guild.id
         });
@@ -22,7 +22,7 @@ module.exports = {
         });
         guildDocument.language = lang;
         await guildDocument.save();
-        message.guild.language = require(`../../locales/${lang}.json`);
-        await message.channel.send(message.guild.language.language_updated);
+        message.guild.language = lang
+        await message.channel.send(client.i18n.get(lang, "commands", "language_updated"));
     }
 }
