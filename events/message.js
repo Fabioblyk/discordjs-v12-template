@@ -20,12 +20,12 @@ module.exports = async message => {
     if (message.client.commands.has(command)) cmdFile = message.client.commands.get(command);
     else if (message.client.aliases.has(command)) cmdFile = message.client.aliases.get(command);
     else return;
-    if (!cmdFile.enabled) return await message.channel.send(client.i18n.get(message.guild.language, "errors", "command_disabled"));
-    if (cmdFile.ownerOnly && !message.client.config.owners.includes(message.author.id)) return await message.channel.send(client.i18n.get(message.guild.language, "errors", "command_owner_only"));
-    if (cmdFile.permissions && !(message.client.config.owners.includes(message.author.id) || message.member.permissions.has(cmdFile.permissions))) return await message.channel.send(client.i18n.get(message.guild.language, "errors", "not_enough_permission", { permissions: cmdFile.permissions.join(", ") }));
+    if (!cmdFile.enabled) return await message.channel.send(message.client.i18n.get(message.guild.language, "errors", "command_disabled"));
+    if (cmdFile.ownerOnly && !message.client.config.owners.includes(message.author.id)) return await message.channel.send(message.client.i18n.get(message.guild.language, "errors", "command_owner_only"));
+    if (cmdFile.permissions && !(message.client.config.owners.includes(message.author.id) || message.member.permissions.has(cmdFile.permissions))) return await message.channel.send(message.client.i18n.get(message.guild.language, "errors", "not_enough_permission", { permissions: cmdFile.permissions.join(", ") }));
     if (cmdFile.cooldown && typeof cmdFile.cooldown === "number" && cmdFile.cooldown >= 1 && cmdFile.cooldown <= 1440) {
         if (!activeUsers.hasOwnProperty(cmdFile.name)) activeUsers[cmdFile.name] = [];
-        if (activeUsers[cmdFile.name].includes(message.author.id)) return await message.channel.send(client.i18n.get(message.guild.language, "errors", "wait_cooldown", { cooldown: cmdFile.cooldown }));
+        if (activeUsers[cmdFile.name].includes(message.author.id)) return await message.channel.send(message.client.i18n.get(message.guild.language, "errors", "wait_cooldown", { cooldown: cmdFile.cooldown }));
     } 
     cmdFile.exec(message.client, message, args);
     if (activeUsers.hasOwnProperty(cmdFile.name)) {
